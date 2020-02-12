@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
 import './App.css';
+import {Button, ButtonToolbar,} from 'react-bootstrap';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+
+    _showAlert() {
+        alert('Hello');
+        console.log('hello where.');
+    }
+
+    showLog() {
+      console.log("where hello");
+    }
+    
+    render() {
+        return (
+            <div className="App">
+                <ButtonToolbar>
+                    {/* Standard button */}
+                    <Button onClick={this._showAlert.bind(this)}>Default</Button>
+
+                    {/* Provides extra visual weight and identifies the primary action in a set of buttons */}
+                    <Button variant="primary" onClick={this.showLog}>Primary</Button>
+
+                    {/* Indicates a successful or positive action */}
+                    <Button variant="success">Success</Button>
+
+                    {/* Contextual button for informational alert messages */}
+                    <Button variant="info">Info</Button>
+
+                    {/* Indicates caution should be taken with this action */}
+                    <Button variant="warning">Warning</Button>
+
+                    {/* Indicates a dangerous or potentially negative action */}
+                    <Button variant="danger">Danger</Button>
+
+                    {/* Deemphasize a button by making it look like a link while maintaining button behavior */}
+                    <Button variant="link" href='http://www.baidu.com'>Link</Button>
+                </ButtonToolbar>
+            </div>
+        );
+    }
 }
 
 export default App;
