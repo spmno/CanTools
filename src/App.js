@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
 import './App.css';
-import {Button, ButtonToolbar,} from 'react-bootstrap';
+import './AppLayout'
+import AppLayout from './AppLayout';
+import { Button } from 'antd'
 
 const { ipcRenderer } = window.require('electron')
+
 
 class App extends Component {
 
@@ -17,37 +20,17 @@ class App extends Component {
         console.log('hello where.');
     }
 
-    showLog = () => {
+    startBox = () => {
       console.log("where hello");
       ipcRenderer.send('start-canbox', 'start command');
     }
 
     render() {
         return (
-            <div className="App">
-                <ButtonToolbar>
-                    {/* Standard button */}
-                    <Button onClick={this._showAlert.bind(this)}>Default</Button>
-
-                    {/* Provides extra visual weight and identifies the primary action in a set of buttons */}
-                    <Button variant="primary" onClick={this.showLog}>Primary</Button>
-
-                    {/* Indicates a successful or positive action */}
-                    <Button variant="success">Success</Button>
-
-                    {/* Contextual button for informational alert messages */}
-                    <Button variant="info">Info</Button>
-
-                    {/* Indicates caution should be taken with this action */}
-                    <Button variant="warning">Warning</Button>
-
-                    {/* Indicates a dangerous or potentially negative action */}
-                    <Button variant="danger">Danger</Button>
-
-                    {/* Deemphasize a button by making it look like a link while maintaining button behavior */}
-                    <Button variant="link" href='http://www.baidu.com'>Link</Button>
-                </ButtonToolbar>
-            </div>
+          <AppLayout>
+            <h1>欢迎使用CANTBOX工具</h1>
+            <Button onClick = {this.startBox} >打开盒子</Button>
+          </AppLayout>
         );
     }
 }

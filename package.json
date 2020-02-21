@@ -1,8 +1,10 @@
 {
   "name": "cantools",
+  "description": "tools for test team",
+  "author": "sunqp",
   "version": "0.1.0",
   "private": true,
-  "main": "build/electron.js",
+  "main": "public/electron.js",
   "build": {
     "appId": "cantools",
     "files": [
@@ -20,14 +22,18 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "antd": "^3.26.9",
     "bootstrap": "^4.4.1",
     "jquery": "^3.4.1",
+    "napi-thread-safe-callback": "^0.0.6",
+    "node-addon-api": "^2.0.0",
     "path": "^0.12.7",
     "popper.js": "^1.16.1",
     "react": "^16.12.0",
-    "react-bootstrap": "^1.0.0-beta.16",
     "react-dom": "^16.12.0",
-    "react-scripts": "3.3.1"
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.3.1",
+    "xlsx": "^0.15.5"
   },
   "devDependencies": {
     "concurrently": "^5.1.0",
@@ -41,7 +47,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron-start": "electron .",
-    "electron-dev": "concurrently \"set BROWSER=none\" \"yarn start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-dev": "concurrently \"yarn start\" \"wait-on http://localhost:3000 && electron .\"",
     "dist": "electron-builder --win --x64"
   },
   "eslintConfig": {

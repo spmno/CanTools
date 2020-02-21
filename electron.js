@@ -1,14 +1,14 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path');
 const url = require('url')
-const pkg = require('../package.json')
-const canbox = require('./Release/canbox')
+const pkg = require('./package.json')
+const canbox = require('./build/Release/canbox')
 
 
 function createWindow () {
   // Create the browser window.
   let win = new BrowserWindow({
-    width: 800,
+    width: 1024,
     height: 600,
     webPreferences: {
       nodeIntegration: true
