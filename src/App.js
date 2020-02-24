@@ -9,7 +9,7 @@ const { ipcRenderer } = window.require('electron')
 
 class App extends Component {
 
-    componentWillMount() {
+  componentDidMount() {
         ipcRenderer.on('start-canbox-complete', (event, arg) => {
             console.log('start complete.');
         });

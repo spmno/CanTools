@@ -1,10 +1,19 @@
 import React, { Component } from 'react'
 import AppLayout from './AppLayout'
-import { Button, Row, Col, Input } from 'antd'
+import { Button, Row, Col, Input, Form } from 'antd'
+
 
 const { TextArea } = Input;
 
-const { ipcRenderer } = window.require('electron')
+const { ipcRenderer } = window.require('electron');
+
+const div1 = {
+    margin: "5px 0px"
+};
+
+const divCenter = {
+    padding:"2px"
+}
 
 class NetManager extends Component {
 
@@ -19,7 +28,7 @@ class NetManager extends Component {
         this.currentLine = 0;
     }
 
-    componentWillMount() {
+    componentDidMount() {
         ipcRenderer.on('netmanager-callback', (event, arg) => {
             console.log('callback:', arg);
             this.updateDisplayInfo(arg);
@@ -51,21 +60,19 @@ class NetManager extends Component {
     render() {
         return (
             <AppLayout>
-                <Row type="flex" justify="start">
-                    <Col span="4">
+                <Row type="flex" justify="start" >
+                    <Col span={4} style={divCenter}>
                     NetManager ID: 
                     </Col>
-                    <Col span="6">
-                    <Input></Input>
+                    <Col span={6}>
+                    <Input style={divCenter}></Input>
                     </Col>
                 </Row>
-                <div  style={{ margin: '20' }}>
-                    <TextArea rows={ this.displayRow } 
-                        defaultValue={"请先输入网络管理ID"} 
-                        value={this.state.displayInfo}
-                        style={{ margin: '5' }} >
-                    </TextArea>
-                </div>
+                <TextArea rows={ this.displayRow } 
+                    defaultValue={"请先输入网络管理ID"} 
+                    value={this.state.displayInfo}
+                    style={div1} >
+                </TextArea>
                 <Row>
                     <Button onClick={this.startNetManager}>开始测试</Button>
                 </Row>
