@@ -35,6 +35,10 @@ class NetManager extends Component {
         });
     }
 
+    componentWillUnmount() {
+        ipcRenderer.send('netmanager', 'stop');
+    }
+
     updateDisplayInfo = (arg) => {
         if (this.isStartTest) {
             if (this.currentLine === this.displayRow) {
@@ -54,7 +58,7 @@ class NetManager extends Component {
 
     startNetManager = () => {
         this.isStartTest = true;
-        ipcRenderer.send('netmanager', 'start command');
+        ipcRenderer.send('netmanager', 'start');
     }
 
     render() {

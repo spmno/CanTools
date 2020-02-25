@@ -5,6 +5,13 @@ const pkg = require('../package.json')
 const canbox = require('../build/Release/canbox')
 
 let win = null;
+var CanboxStatus = {
+  OPEN: 1,
+  CLOSE: 2,
+  ERROR: 3,
+};
+
+var boxStatus = CanboxStatus.CLOSE;
 
 function createWindow () {
   // Create the browser window.
@@ -38,13 +45,35 @@ function nativeCallback () {
 
 ipcMain.on('start-canbox', (event, arg) => {
   console.log("start canbox message comming.");
-  canbox.startBox();
-  //canbox.sendInfoLoop(nativeCallback, 5);
+  if (canbox.startBox()) {
+    boxStatus = CanboxStatus.OPEN;
+    event.reply('start-canbox-complete', "start commplete.");
+  } else {
+    boxStatus = CanboxStatus.ERROR;
+    event.reply('start-canbox-complete', "start error.");
+  }
   console.log("print startbox");
-  event.reply('start-canbox-complete', "start commplete.");
+  
 });
 
+ipcMain.on('close-canbox', (event, arg) => {
+  console.log("close canbox message comming.");
+  canbox.closeBox();
+  console.log("print closebox");
+  event.reply('close-canbox-complete', "close commplete.");
+});
+
+
+
 ipcMain.on('netmanager', (event, arg) => {
-  console.log("netmanager from react.");
-  canbox.sendInfoLoop(nativeCallback, 5);
+  if (arg === "start") {
+    console.log("start netmanager from react.");
+    if (boxStatus !== CanboxStatus.OPEN) {
+      event.reply("netmanager-reply", "not start");
+    }
+    canbox.sendInfoLoop(nativeCallback);
+  } else {
+    canbox.stopSendInfoLoop();
+    console.log("stop netmanager from react.");
+  }
 });

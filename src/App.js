@@ -2,18 +2,12 @@ import React, {Component} from 'react';
 import './App.css';
 import './AppLayout'
 import AppLayout from './AppLayout';
-import { Button } from 'antd'
+import { Button, Row, Col } from 'antd'
 
 const { ipcRenderer } = window.require('electron')
 
 
 class App extends Component {
-
-  componentDidMount() {
-        ipcRenderer.on('start-canbox-complete', (event, arg) => {
-            console.log('start complete.');
-        });
-    }
 
     _showAlert() {
         alert('Hello');
@@ -21,15 +15,29 @@ class App extends Component {
     }
 
     startBox = () => {
-      console.log("where hello");
+      console.log("start box");
       ipcRenderer.send('start-canbox', 'start command');
+    }
+
+    closeBox = () => {
+      console.log("close box");
+      ipcRenderer.send('close-canbox', 'close command');
     }
 
     render() {
         return (
           <AppLayout>
             <h1>欢迎使用CANTBOX工具</h1>
-            <Button onClick = {this.startBox} >打开盒子</Button>
+            <br/>
+            <Row type="flex" justify="start" gutter={[16, 32]} >
+              <Col span={4} >
+                <Button onClick = {this.startBox} >打开盒子</Button>
+              </Col>
+              <Col span={4} >
+                <Button onClick = {this.closeBox} >关闭盒子</Button>
+              </Col>
+            </Row>
+
           </AppLayout>
         );
     }
