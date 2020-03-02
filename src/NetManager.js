@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import AppLayout from './AppLayout'
 import { Button, Row, Col, Input, Form } from 'antd'
 
 
@@ -24,6 +23,7 @@ class NetManager extends Component {
         }
         this.isStartTest = false;
         this.displayRow = 20;
+        this.loopRow = 15;
         this.displayContent = "";
         this.currentLine = 0;
     }
@@ -41,12 +41,12 @@ class NetManager extends Component {
 
     updateDisplayInfo = (arg) => {
         if (this.isStartTest) {
-            if (this.currentLine === this.displayRow) {
-                this.displayContent = arg;
+            if (this.currentLine === this.loopRow) {
+                this.displayContent = arg[0] + "," + arg[1];
                 this.displayContent += "\r\n";
                 this.currentLine = 0;
             } else {
-                this.displayContent += arg;
+                this.displayContent += arg[0] + "," + arg[1];
                 this.displayContent += "\r\n";
                 this.currentLine++;
             }
@@ -63,7 +63,7 @@ class NetManager extends Component {
 
     render() {
         return (
-            <AppLayout>
+            <div>
                 <Row type="flex" justify="start" >
                     <Col span={4} style={divCenter}>
                     NetManager ID: 
@@ -80,7 +80,7 @@ class NetManager extends Component {
                 <Row>
                     <Button onClick={this.startNetManager}>开始测试</Button>
                 </Row>
-            </AppLayout>
+            </div>
         );
     }
 }

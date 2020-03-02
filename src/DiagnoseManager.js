@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
-import AppLayout from './AppLayout'
 
 class DiagnoseManager extends Component {
 
     render() {
         return (
-            <AppLayout>
+            <div>
                 <h1>Hello disgnose manager.</h1>
-            </AppLayout>
+            </div>
         );
     }
 }

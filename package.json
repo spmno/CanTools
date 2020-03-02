@@ -36,6 +36,11 @@
     "xlsx": "^0.15.5"
   },
   "devDependencies": {
+    "@storybook/addon-actions": "^5.3.14",
+    "@storybook/addon-links": "^5.3.14",
+    "@storybook/addons": "^5.3.14",
+    "@storybook/preset-create-react-app": "^1.5.2",
+    "@storybook/react": "^5.3.14",
     "concurrently": "^5.1.0",
     "electron": "^8.0.0",
     "electron-builder": "^22.3.2",
@@ -48,7 +53,9 @@
     "eject": "react-scripts eject",
     "electron-start": "electron .",
     "electron-dev": "concurrently \"yarn start\" \"wait-on http://localhost:3000 && electron .\"",
-    "dist": "electron-builder --win --x64"
+    "dist": "electron-builder --win --x64",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
     "extends": "react-app"

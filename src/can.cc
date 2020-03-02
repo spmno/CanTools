@@ -49,7 +49,11 @@ Napi::Boolean StartBox(const Napi::CallbackInfo& info) {
   if (can_box_instance.open() == 0) {
     if (can_box_instance.init(CAN_CHL0) == 0) {
       result = true;
+    } else {
+      cout << "init native error." << endl;
     }
+  } else {
+    cout << "open native error." << endl;
   } 
   
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -96,29 +100,42 @@ Napi::Value SendInfoLoop( const Napi::CallbackInfo& info )
 
   // Create a native thread
   nativeThread = std::thread( [] {
-    auto callback = []( Napi::Env env, Napi::Function jsCallback, int* value ) {
+    auto callback = []( Napi::Env env, Napi::Function jsCallback, const char* value ) {
       // Transform native data into JS data, passing it to the provided 
       // `jsCallback` -- the TSFN's JavaScript function.
-      jsCallback.Call( {Napi::Number::New( env, *value )} );
-      
+      //jsCallback.Call( {Napi::Number::New( env, *value )} );
+      jsCallback.Call( {Napi::String::New(env, value)} );
       // We're finished with the data.
-      delete value;
     };
 
+    unsigned int size, id;
+    unsigned char _buf[8];
+    char string_buf[32];
     while(loop_flag)
     {
+
+      if (0 < (size = can_box_instance.receive(CAN_CHL0, &id, _buf, sizeof(_buf)))) {
+        cout << "id:" << id << ",data:";
+        sprintf(string_buf, "%x, %02x %02x %02x %02x %02x %02x %02x %02x", id,
+                _buf[0], _buf[1], _buf[2], _buf[3], _buf[4], _buf[5], _buf[6], _buf[7]);
+        napi_status status = tsfn.BlockingCall( string_buf, callback );
+        if ( status != napi_ok )
+        {
+          // Handle error
+          cout << "block call failed" << endl;
+          break;
+        }
+        
+      } else {
+        cout << "recive failed!, size=" << size <<  endl;
+      }
       // Create new data
-      int* value = new int( clock() );
+      //int* value = new int( clock() );
 
       // Perform a blocking call
-      napi_status status = tsfn.BlockingCall( value, callback );
-      if ( status != napi_ok )
-      {
-        // Handle error
-        break;
-      }
 
-      std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
+
+      //std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
     }
 
     // Release the thread-safe function

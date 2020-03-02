@@ -26,7 +26,7 @@ class App extends Component {
 
     render() {
         return (
-          <AppLayout>
+          <div>
             <h1>欢迎使用CANTBOX工具</h1>
             <br/>
             <Row type="flex" justify="start" gutter={[16, 32]} >
@@ -37,8 +37,7 @@ class App extends Component {
                 <Button onClick = {this.closeBox} >关闭盒子</Button>
               </Col>
             </Row>
-
-          </AppLayout>
+            </div>
         );
     }
 }

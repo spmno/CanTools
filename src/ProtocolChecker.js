@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button, Row, Alert } from 'antd';
-import AppLayout from './AppLayout'
 import XLSX from 'xlsx';
 
 const fs = require('fs');
@@ -110,7 +109,7 @@ export default class ProtocalChecker extends React.Component {
   render() {
     console.log('debug info');
     return (
-        <AppLayout>
+        <div>
             <Row>
             <Alert message={this.state.alertInfo} type={this.state.alertType} />
             </Row>
@@ -121,7 +120,7 @@ export default class ProtocalChecker extends React.Component {
             <Row>
             {this.state.fileName}
             </Row>
-        </AppLayout>
+        </div>
     );
   }
 }

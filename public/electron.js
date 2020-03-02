@@ -40,7 +40,8 @@ app.whenReady().then(createWindow)
 
 function nativeCallback () {
   console.log("JavaScript callback called with arguments", Array.from(arguments));
-  win.webContents.send('netmanager-callback', arguments[0])
+  console.log(Array.from(arguments).toString());
+  //win.webContents.send('netmanager-callback', arguments[0])
 }
 
 ipcMain.on('start-canbox', (event, arg) => {
@@ -48,9 +49,11 @@ ipcMain.on('start-canbox', (event, arg) => {
   if (canbox.startBox()) {
     boxStatus = CanboxStatus.OPEN;
     event.reply('start-canbox-complete', "start commplete.");
+    console.log("start success, electronjs");
   } else {
     boxStatus = CanboxStatus.ERROR;
     event.reply('start-canbox-complete', "start error.");
+    console.log("start error, electronjs");
   }
   console.log("print startbox");
   
