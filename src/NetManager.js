@@ -42,11 +42,11 @@ class NetManager extends Component {
     updateDisplayInfo = (arg) => {
         if (this.isStartTest) {
             if (this.currentLine === this.loopRow) {
-                this.displayContent = arg[0] + "," + arg[1];
+                this.displayContent = arg[0];
                 this.displayContent += "\r\n";
                 this.currentLine = 0;
             } else {
-                this.displayContent += arg[0] + "," + arg[1];
+                this.displayContent += arg[0];
                 this.displayContent += "\r\n";
                 this.currentLine++;
             }

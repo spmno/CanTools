@@ -39,9 +39,8 @@ function createWindow () {
 app.whenReady().then(createWindow)
 
 function nativeCallback () {
-  console.log("JavaScript callback called with arguments", Array.from(arguments));
-  console.log(Array.from(arguments).toString());
-  //win.webContents.send('netmanager-callback', arguments[0])
+  console.log("JavaScript callback called with arguments", arguments);
+  win.webContents.send('netmanager-callback', arguments)
 }
 
 ipcMain.on('start-canbox', (event, arg) => {
@@ -61,6 +60,7 @@ ipcMain.on('start-canbox', (event, arg) => {
 
 ipcMain.on('close-canbox', (event, arg) => {
   console.log("close canbox message comming.");
+  boxStatus = CanboxStatus.CLOSE;
   canbox.closeBox();
   console.log("print closebox");
   event.reply('close-canbox-complete', "close commplete.");
