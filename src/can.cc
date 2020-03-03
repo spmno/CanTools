@@ -88,6 +88,7 @@ Napi::Value SendInfoLoop( const Napi::CallbackInfo& info )
   //int count = info[1].As<Napi::Number>().Int32Value();
 
   // Create a ThreadSafeFunction
+  loop_flag = true;
   tsfn = Napi::ThreadSafeFunction::New(
       env,
       info[0].As<Napi::Function>(),  // JavaScript function called asynchronously
@@ -128,6 +129,7 @@ Napi::Value SendInfoLoop( const Napi::CallbackInfo& info )
         
       } else {
         cout << "recive failed!, size=" << size <<  endl;
+        std::this_thread::sleep_for( std::chrono::microseconds(100));
       }
       // Create new data
       //int* value = new int( clock() );
