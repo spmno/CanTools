@@ -84,7 +84,7 @@ export default class ProtocalChecker extends React.Component {
             const sheetNames = workBook.SheetNames;
             console.log('sheetNames: ', sheetNames);
             const workSheet = workBook.Sheets[sheetNames[0]];
-            const rows = workSheet['!rows'];
+            //const rows = workSheet['!rows'];
             const ref = workSheet['!ref'];
             console.log('ref: ', ref);
             const beginEnd = ref.split(':').map( str => { return parseInt(str.match(/[0-9]+$/g))});

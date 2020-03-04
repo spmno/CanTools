@@ -39,8 +39,8 @@ function createWindow () {
 app.whenReady().then(createWindow)
 
 function nativeCallback () {
-  console.log("JavaScript callback called with arguments", arguments);
-  win.webContents.send('netmanager-callback', arguments)
+  console.log("JavaScript callback called with arguments", arguments[0]);
+  win.webContents.send('netmanager-callback', arguments[0])
 }
 
 ipcMain.on('start-canbox', (event, arg) => {

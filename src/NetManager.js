@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Row, Col, Input, Form } from 'antd'
+import { Button, Row, Col, Input } from 'antd'
 
 
 const { TextArea } = Input;
@@ -42,11 +42,11 @@ class NetManager extends Component {
     updateDisplayInfo = (arg) => {
         if (this.isStartTest) {
             if (this.currentLine === this.loopRow) {
-                this.displayContent = arg[0];
+                this.displayContent = arg;
                 this.displayContent += "\r\n";
                 this.currentLine = 0;
             } else {
-                this.displayContent += arg[0];
+                this.displayContent += arg;
                 this.displayContent += "\r\n";
                 this.currentLine++;
             }
