@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
 import './App.css';
-import { Button, Row, Col, Table } from 'antd'
+import { Button, Row, Col, Table, Input, message } from 'antd'
 const { ipcRenderer } = window.require('electron')
 
+const div1 = {
+  margin: "3px 0px"
+};
 
 class App extends Component {
 
@@ -30,7 +33,9 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-        displayInfo: [{key:1, time:"0", id: "0", data:"0 0 0 0 0 0 0 0"}]
+        displayInfo: [{key:1, time:"0", id: "0", data:"0 0 0 0 0 0 0 0"}],
+        id:"",
+        data:""
     }
     this.isStartTest = false;
     this.displayRow = 20;
@@ -50,7 +55,7 @@ class App extends Component {
 
     ipcRenderer.on('start-canbox-complete', (event, arg) => {
       console.log('start-canbox-complete', arg);
-      alert(arg);
+      message.info(arg);
     });
   }
 
@@ -100,12 +105,54 @@ class App extends Component {
     ipcRenderer.send('netmanager', 'stop');
   }
 
+  sendData = () => {
+    const id = parseInt(this.state.id, 16);
+    console.log(id);
+    const data = this.state.data.slice(0, -1);
+    const dataArray = data.split(',').map(x => parseInt(x, 16));
+    const dataBuffer = new Uint8Array(dataArray).buffer;
+    console.log('databuffer:', dataBuffer);
+    ipcRenderer.send('send-buffer', [id, dataBuffer]);
+  }
+
+  handleChange = (event) => {
+    console.log(event, ",", event.target.value);
+    const field = event.target.name;
+    this.setState({
+        [field]: event.target.value
+    })
+  }
+
+  handleDataChange = (event) => {
+    console.log(event, ",target:", event.target.value, ',state:', this.state.data);
+    if (event.target.value.length > 2*8+7) {
+      message.warning('长度够了');
+      return;
+    }
+    if ((event.target.value.length+1)%3 === 0) {
+      if (event.target.value.length > this.state.data.length) {
+        this.setState ({
+          data: event.target.value + ','
+        }); 
+      } else {
+        this.setState ({
+          data: event.target.value.slice(0, -1)
+        });
+      }
+
+    } else {
+      this.setState ({
+        data: event.target.value
+      });
+    }
+  }
+
   render() {
       return (
         <div>
           <h3>欢迎使用CANTBOX工具</h3>
-          <Table columns={this.columns} dataSource={this.displayContent} />
-          <Row type="flex" justify="start" gutter={[16, 32]} >
+          
+          <Row type="flex" justify="start" gutter={[16, 32]} style={div1}>
             <Col span={4} >
               <Button onClick = {this.startBox} >打开盒子</Button>
             </Col>
@@ -118,6 +165,14 @@ class App extends Component {
             <Col span={4} >
             <Button onClick = {this.stopReceive} >停止接收</Button>
             </Col>
+          </Row>
+          <Table columns={this.columns} dataSource={this.displayContent} />
+          <Row gutter={[16, 32]} style={div1}>
+            <Col span={1}>ID:</Col>
+            <Col span={3}><Input name='id' value={this.state.id} onChange={this.handleChange}></Input></Col>
+            <Col span={2}>Data:</Col>
+            <Col span={10}><Input name='data' value={this.state.data} onChange={this.handleDataChange}></Input></Col>
+            <Col span={2}><Button onClick = {this.sendData} >发送</Button></Col>
           </Row>
           </div>
       );

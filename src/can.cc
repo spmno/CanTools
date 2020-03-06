@@ -15,33 +15,6 @@ static Timer timer;
 static can_comm can_box_instance(USBCAN_II, CAN_DEV_IDX0);
 static boolean loop_flag = true;
 
-#define UDEBUG 1
-
-static void print_buf(const char* _prefix, const uint32_t _id, const uint8_t* _buf, const uint16_t _size)
-{
-#if defined UDEBUG
-	static std::mutex mtx;
-	std::lock_guard<std::mutex> guard(mtx);
-	printf("%s(0x%X,%d): ", _prefix, (unsigned int)_id, _size);
-	for (uint16_t i = 0; i < _size; i++)
-		printf("%02X ", _buf[i]);
-	printf("\n");
-#endif
-}
-
-static uint8_t can_receive_callback(uint32_t* const _id, uint8_t* const _buf, const uint8_t _size)
-{
-	//assert(NULL != _id && NULL != _buf);
-
-	uint8_t size = 0;
-
-	if (0 < (size = can_box_instance.receive(CAN_CHL0, _id, _buf, _size)))
-		print_buf("CAN RX", *_id, _buf, size);
-
-	return size;
-}
-
-
 Napi::Boolean StartBox(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   boolean result = false;
@@ -62,6 +35,8 @@ Napi::Boolean StartBox(const Napi::CallbackInfo& info) {
 
 Napi::Boolean CloseBox(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
+  cout << "end the receive thread" << endl;
+  loop_flag = false;
   cout << "close box from native." << endl;
   can_box_instance.close();
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -155,13 +130,34 @@ Napi::Boolean StopSendInfoLoop(const Napi::CallbackInfo& info) {
   return Napi::Boolean::New(env, true);
 }
 
+Napi::Boolean SendCanBuffer(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  cout << "send canbuf from native." << endl;
+  if ( info.Length() < 2 ) {
+    cout << "arguments error: ";
+    cout << info.Length() << endl;
+    throw Napi::TypeError::New( env, "Expected two arguments" );
+  }
+  int id = info[0].As<Napi::Number>().Int32Value();
+  cout << id << endl;
+  unsigned char* send_buf = static_cast<unsigned char*>(info[1].As<Napi::ArrayBuffer>().Data());
+  cout << send_buf[0] << endl;
+  if (0 == can_box_instance.transmit(CAN_CHL0, id, send_buf, 8)) {
+    return Napi::Boolean::New(env, false);
+  }
+  std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  return Napi::Boolean::New(env, true);
+}
+
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
   exports.Set("startBox", Napi::Function::New(env, StartBox));
   exports.Set("sendInfoLoop", Napi::Function::New(env, SendInfoLoop));
   exports.Set("closeBox", Napi::Function::New(env, CloseBox));
   exports.Set("stopSendInfoLoop", Napi::Function::New(env, StopSendInfoLoop));
+  exports.Set("sendCanBuffer", Napi::Function::New(env, SendCanBuffer));
   return exports;
 }
+
 
 NODE_API_MODULE(canbox, Init)

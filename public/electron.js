@@ -80,3 +80,15 @@ ipcMain.on('netmanager', (event, arg) => {
     console.log("stop netmanager from react.");
   }
 });
+
+ipcMain.on('send-buffer', (event, arg) => {
+  console.log('arg:', arg);
+  let id = arg[0];
+  let buffer = arg[1];
+  console.log('id:', id, ", buffer", buffer);
+  if (canbox.sendCanBuffer(id, buffer)) {
+    console.log("send success, electron.js");
+  } else {
+    console.log("send error electron.js");
+  }
+});
